@@ -1,0 +1,8 @@
+{
+  "name": "Buttplug",
+  "content_in_root": false,
+  "render_readme": true,
+  "hide_default_branch": false,
+  "filename": "buttplug",
+  "homeassistant": "2022.6.7b0"
+}

@@ -2,13 +2,14 @@
   "domain": "buttplug",
   "name": "Buttplug",
   "config_flow": true,
-  "documentation": "https://www.home-assistant.io/integrations/buttplug",
+  "documentation": "https://github.com/DevelopmentalOctopus/ha-buttplug",
+  "issue_tracker": "https://github.com/DevelopmentalOctopus/ha-buttplug/issues",
   "requirements": ["buttplug==0.2.1"],
   "ssdp": [],
   "zeroconf": [],
   "homekit": {},
   "dependencies": [],
   "codeowners": ["@DevelopmentalOctopus"],
-  "iot_class": "local_push"
-  "version": "0.1.0"
+  "iot_class": "local_push",
+  "version": "0.1.1"
 }
