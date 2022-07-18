@@ -1,6 +1,8 @@
 """Support for Buttplug controls using the number platform."""
 from __future__ import annotations
 
+from websockets.exceptions import ConnectionClosedError
+
 from buttplug.client import (
     ButtplugClient,
     ButtplugClientConnectorError,
@@ -118,21 +120,36 @@ class ButtplugNumberEntity(NumberEntity):
     async def async_set_value(self, value: float) -> None:
         """Update the current value."""
         internal_value = value / 100
-        if self._cmd_type == CMD_TYPE_VIBRATE:
-            await self._dev.send_vibrate_cmd({self._index: internal_value})
-        elif self._cmd_type == CMD_TYPE_ROTATE:
-            await self._dev.send_rotate_cmd(
-                {self._index: (abs(internal_value), internal_value >= 0)}
-            )  # negative means opposite direction
-        elif self._cmd_type == CMD_TYPE_LINEAR:
-            # the device can move back and forth. We can call send_linear_cmd on the device
-            # and it'll tell the server to make the device move to 90% of the
-            # maximum position over 1 second (1000ms).
-            await self._dev.send_linear_cmd(
-                {self._index: (1000, internal_value)}
-            )  # TODO figure out how to set two numbers at once from the UI for this.
-            # We wait 1 second for the move, then we move it back to the 0% position.
-        self._attr_value = value
+        try:
+            if self._cmd_type == CMD_TYPE_VIBRATE:
+                await self._dev.send_vibrate_cmd({self._index: internal_value})
+            elif self._cmd_type == CMD_TYPE_ROTATE:
+                await self._dev.send_rotate_cmd(
+                    {self._index: (abs(internal_value), internal_value >= 0)}
+                )  # negative means opposite direction
+            elif self._cmd_type == CMD_TYPE_LINEAR:
+                # the device can move back and forth. We can call send_linear_cmd on the device
+                # and it'll tell the server to make the device move to 90% of the
+                # maximum position over 1 second (1000ms).
+                await self._dev.send_linear_cmd(
+                    {self._index: (1000, internal_value)}
+                )  # TODO figure out how to set two numbers at once from the UI for this.
+                # We wait 1 second for the move, then we move it back to the 0% position.
+        except ConnectionClosedError:
+            LOGGER.exception(
+                "Failed to send command to device; connection between Home Assistant and Buttplug server already closed."
+            )
+            # TODO send signal to trigger reconnection?
+        except Exception as err:
+            LOGGER.exception(
+                "Exception while sending %s (%s) command to %s: %s",
+                self._cmd_type,
+                internal_value,
+                self._dev.name,
+                err,
+            )
+        else:
+            self._attr_value = value
 
     # async def async_added_to_hass(self) -> None:
     #     """Call when entity is added."""

@@ -20,6 +20,7 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers import device_registry
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.typing import UNDEFINED, ConfigType
+from websockets.exceptions import ConnectionClosedError
 
 # from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
@@ -337,8 +338,12 @@ async def disconnect_client(hass: HomeAssistant, entry: ConfigEntry) -> None:
         LOGGER.warning("asyncio.CancelledError")
     except asyncio.exceptions.CancelledError:
         LOGGER.warning("asyncio.exceptions.CancelledError")
-    # except ConnectionClosedError:
-    #     LOGGER.warning("Already Disconnected when trying to stop scanning")
+    except asyncio.exceptions.CancelledError:
+        LOGGER.warning("asyncio.exceptions.CancelledError")
+    except ConnectionClosedError:
+        LOGGER.exception(
+            "Failed to stop scanning; connection between Home Assistant and Buttplug server already closed."
+        )
 
     # TODO handle other tasks and/or listeners as needed here
     listen_task: asyncio.Task = data[DATA_CLIENT_LISTEN_TASK]
@@ -355,7 +360,12 @@ async def disconnect_client(hass: HomeAssistant, entry: ConfigEntry) -> None:
 
     # TODO stop all devices? probably should.
     LOGGER.warning("About to call client.disconnect()")
-    await client.disconnect()
+    try:
+        await client.disconnect()
+    except ConnectionClosedError:
+        LOGGER.exception(
+            "Failed to disconnect; connection between Home Assistant and Buttplug server already closed."
+        )
     LOGGER.warning("Disconnected from Buttplug Server")
 
 
