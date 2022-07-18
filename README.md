@@ -1,7 +1,10 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
 
 # Instructions
-- Use HACS to install, or copy the `custom_components/buttplug` folder into Home Assistant's `custom_components` folder.
+- Either
+  - Use [HACS](https://hacs.xyz/) to install
+    - Add this repository to HACS as a [custom repository](https://hacs.xyz/docs/faq/custom_repositories).
+  - Copy the `custom_components/buttplug` folder into Home Assistant's `custom_components` folder.
 - Restart Home Assistant.
 - Add the Buttplug integration via Home Assistant's UI.
   - Provide host/ip and port of an existing buttplug server.
