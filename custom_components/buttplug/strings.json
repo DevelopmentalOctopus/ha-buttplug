@@ -3,9 +3,9 @@
     "step": {
       "user": {
         "data": {
-          "name": "Client Name",
+          "name": "[%key:common::config_flow::data::name%]",
           "host": "[%key:common::config_flow::data::host%]",
-          "port": "Port"
+          "port": "[%key:common::config_flow::data::port%]"
         }
       }
     },
