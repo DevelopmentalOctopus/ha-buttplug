@@ -43,8 +43,7 @@ DATA_CLIENT_LISTEN_TASK = "client_listen_task"
 DATA_START_PLATFORM_TASK = "start_platform_task"
 
 DATA_KEY_NAME = "name"
-DATA_KEY_HOST = "host"
-DATA_KEY_PORT = "port"
+DATA_KEY_SERVER = "server"
 
 BUTTPLUG_CMD_VIBRATE = "VibrateCmd"
 BUTTPLUG_CMD_ROTATE = "RotateCmd"
@@ -172,7 +171,7 @@ async def async_setup_entry(
 
     # TODO use async_get_clientsession(hass). ButtplugClient would need to use aiohttp.ClientSession like in here https://github.com/home-assistant-libs/zwave-js-server-python/blob/master/zwave_js_server/client.py
     client = ButtplugClient(entry.data[DATA_KEY_NAME])
-    address = f"ws://{entry.data[DATA_KEY_HOST]}:{entry.data[DATA_KEY_PORT]}"
+    address = entry.data[DATA_KEY_SERVER]
     connector = ButtplugClientWebsocketConnector(address)
 
     # connect and throw error if connection failed

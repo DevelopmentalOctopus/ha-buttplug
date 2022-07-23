@@ -14,19 +14,15 @@ from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 from typing import Any
 
-from .const import DEFAULT_HOST, DEFAULT_NAME, DEFAULT_PORT, DOMAIN, LOGGER
+from .const import DEFAULT_NAME, DEFAULT_SERVER, DOMAIN, LOGGER
 
 # TODO adjust the data schema to the data that you need
-STEP_USER_DATA_SCHEMA = vol.Schema(
-    {
-        vol.Required("name", default=DEFAULT_NAME): str,
-        vol.Required("host", default=DEFAULT_HOST): str,
-        vol.Required("port", default=DEFAULT_PORT): int
-        # TODO support secure websockets? wss? does the client handle that?
-        # TODO clarify that the host/port is for a websocket connection.
-        # TODO https://buttplug-developer-guide.docs.buttplug.io/cookbook/connector-setup-in-depth.html#buttplug-ping when supported
-    }
-)
+STEP_USER_DATA_SCHEMA = vol.Schema({
+    vol.Required("name", default=DEFAULT_NAME): str,
+    vol.Required("server", default=DEFAULT_SERVER): str
+})
+
+# TODO https://buttplug-developer-guide.docs.buttplug.io/cookbook/connector-setup-in-depth.html#buttplug-ping when supported
 
 
 class PlaceholderHub:
@@ -78,11 +74,9 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     #     your_validate_func, data["name"], address
     # )
     # TODO check if buttplug is built with async as described above.
-
-    address = f"ws://{data['host']}:{data['port']}"
     # TODO possible to use existing websocket thing that would handle the lifecycle of the connection for me?
 
-    hub = PlaceholderHub(data["name"], address)
+    hub = PlaceholderHub(data["name"], data['server'])
 
     if not await hub.authenticate():
         raise CannotConnect

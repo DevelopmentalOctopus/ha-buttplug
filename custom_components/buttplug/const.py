@@ -4,8 +4,7 @@ import logging
 DOMAIN = "buttplug"
 
 DEFAULT_NAME = "Home Assistant"
-DEFAULT_HOST = "localhost"
-DEFAULT_PORT = 12345
+DEFAULT_SERVER = "ws://localhost:12345"
 
 
 DATA_CLIENT = "client"
