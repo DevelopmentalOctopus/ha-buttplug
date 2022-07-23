@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import asyncio
-
 from async_timeout import timeout
 from buttplug.client import (
     ButtplugClient,
@@ -11,7 +10,6 @@ from buttplug.client import (
     ButtplugClientWebsocketConnector,
 )
 from buttplug.core.errors import ButtplugDeviceError, ButtplugHandshakeError
-
 from homeassistant.components.number import DOMAIN as NUMBER_DOMAIN
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EVENT_HOMEASSISTANT_STOP
@@ -19,10 +17,8 @@ from homeassistant.core import Event, HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers import device_registry
 from homeassistant.helpers.dispatcher import async_dispatcher_send
-from homeassistant.helpers.typing import UNDEFINED, ConfigType
+from homeassistant.helpers.typing import ConfigType
 from websockets.exceptions import ConnectionClosedError
-
-# from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import (
     DATA_CLIENT,
@@ -31,6 +27,8 @@ from .const import (
     EVENT_DEVICE_ADDED_TO_REGISTRY,
     LOGGER,
 )
+
+# from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 
 # TODO device identifiers are being turned from a list with one string to lists of individual characters when the server is restarted via ui. need to see whether it happens on stop or start. With buttplug disabled, ui restart mangles the identifiers AND sets "disabled_by": "config_entry"
@@ -192,6 +190,7 @@ async def async_setup_entry(
     except asyncio.TimeoutError as err:
         raise ConfigEntryNotReady(f"Failed to connect: {err}") from err
     except Exception as err:
+        logger.exception("Unexpected exception")
         raise ConfigEntryNotReady(
             "Unexpected Exception when trying to connect."
         ) from err

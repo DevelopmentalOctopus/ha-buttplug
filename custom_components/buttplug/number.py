@@ -9,7 +9,6 @@ from buttplug.client import (
     ButtplugClientDevice,
     ButtplugClientWebsocketConnector,
 )
-from buttplug.core.errors import ButtplugDeviceError, ButtplugHandshakeError
 
 from homeassistant.components.number import (
     DOMAIN as NUMBER_DOMAIN,
