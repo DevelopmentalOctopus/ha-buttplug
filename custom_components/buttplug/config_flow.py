@@ -16,7 +16,6 @@ from typing import Any
 
 from .const import DEFAULT_NAME, DEFAULT_SERVER, DOMAIN, LOGGER
 
-# TODO adjust the data schema to the data that you need
 STEP_USER_DATA_SCHEMA = vol.Schema({
     vol.Required("name", default=DEFAULT_NAME): str,
     vol.Required("server", default=DEFAULT_SERVER): str
@@ -76,7 +75,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     # TODO check if buttplug is built with async as described above.
     # TODO possible to use existing websocket thing that would handle the lifecycle of the connection for me?
 
-    hub = PlaceholderHub(data["name"], data['server'])
+    hub = PlaceholderHub(data["name"], data["server"])
 
     if not await hub.authenticate():
         raise CannotConnect
@@ -87,7 +86,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Buttplug."""
 
-    VERSION = 1
+    VERSION = 2
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
