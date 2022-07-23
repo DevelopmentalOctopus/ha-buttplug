@@ -190,7 +190,7 @@ async def async_setup_entry(
     except asyncio.TimeoutError as err:
         raise ConfigEntryNotReady(f"Failed to connect: {err}") from err
     except Exception as err:
-        logger.exception("Unexpected exception")
+        LOGGER.exception(f"Exception while connecting to {address}")
         raise ConfigEntryNotReady(
             "Unexpected Exception when trying to connect."
         ) from err
