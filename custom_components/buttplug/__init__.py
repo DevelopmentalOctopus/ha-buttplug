@@ -121,7 +121,10 @@ async def device_added(
     """Add device to registry."""
     register_device(hass, entry, dev_reg, dev)
     LOGGER.warning("Device added: %s", dev.name)
-    hass.async_create_task(ping_buttplug(dev))
+    if dev.name not in ["WeVibe Moxie", "WeVibe Chorus"]:
+        # Avoid pinging devices that have no real off button; they might vibrate while in storage.
+        # TODO turn this into a user-configurable whitelist.
+        hass.async_create_task(ping_buttplug(dev))
 
 
 async def device_disconnected(
