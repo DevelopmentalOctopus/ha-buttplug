@@ -95,11 +95,11 @@ class ButtplugNumberEntity(NumberEntity):
         self._dev = dev
         self._cmd_type = cmd_type
         self._index = index
-        self._attr_value = 0
-        self._attr_max_value = 100
-        self._attr_min_value = -100 if cmd_type == CMD_TYPE_ROTATE else 0
+        self._attr_native_value = 0
+        self._attr_native_max_value = 100
+        self._attr_native_min_value = -100 if cmd_type == CMD_TYPE_ROTATE else 0
+        self._attr_native_step = 1
         self._attr_mode = NumberMode.SLIDER
-        self._attr_step = 1
 
         self._attr_device_info = DeviceInfo(identifiers={dev.name})
 
@@ -116,7 +116,7 @@ class ButtplugNumberEntity(NumberEntity):
             base_attr_name if sole_index else f"{base_attr_name} ({index})"
         )  # TODO client name too?
 
-    async def async_set_value(self, value: float) -> None:
+    async def async_set_native_value(self, value: float) -> None:
         """Update the current value."""
         internal_value = value / 100
         try:
@@ -148,7 +148,7 @@ class ButtplugNumberEntity(NumberEntity):
                 err,
             )
         else:
-            self._attr_value = value
+            self._attr_native_value = value
 
     # async def async_added_to_hass(self) -> None:
     #     """Call when entity is added."""
