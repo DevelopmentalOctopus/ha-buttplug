@@ -247,7 +247,7 @@ async def setup_driver(
         """Set up platform if needed."""
         if platform not in platform_setup_tasks:
             platform_setup_tasks[platform] = hass.async_create_task(
-                hass.config_entries.async_forward_entry_setup(entry, platform)
+                hass.config_entries.async_forward_entry_setups(entry, [platform])
             )
         await platform_setup_tasks[platform]
 
